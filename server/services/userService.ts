@@ -34,6 +34,11 @@ export class UserService {
         }
     }
 
+    static async create(user: ApiUserInterface): Promise<ApiUserInterface> {
+        const result = await this.prisma.user.create({ data: user });
+        return this.formatUserArray([result])[0];
+    }
+
     static formatUserArray(array: ApiUserInterface[]): ApiUserInterface[]
     {
         return array.map((user: ApiUserInterface) => {

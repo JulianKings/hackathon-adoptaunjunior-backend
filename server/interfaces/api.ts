@@ -1,4 +1,4 @@
 export interface ApiAbstractInterface
 {
-    id: number;
+    id?: number;
 }

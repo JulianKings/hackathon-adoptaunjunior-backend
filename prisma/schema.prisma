@@ -49,6 +49,7 @@ model User {
   role            Role        @default(user)
   level           Knowledge   @default(student)
   likes           Int         @default(0)
+  created_at      DateTime    @default(now())
   issues          HelpIssue[]
   solutions       Solution[]
 
@@ -64,10 +65,22 @@ model Challenge {
   content     String
   published   Boolean     @default(false)
   difficulty  Difficulty  @default(basic)
+  rating      ChallengeRating[]
+  picture     String
   tags        TagsByChallenges[]
   solutions   Solution[] 
 
   @@map("challenges")      
+}
+
+model ChallengeRating {
+  id            Int         @id @default(autoincrement())
+  created_at    DateTime    @default(now())
+  challenge     Challenge   @relation(fields: [challenge_id], references: [id], onDelete: Cascade)
+  challenge_id  Int
+  value         Int
+
+  @@map("challenge_rating")      
 }
 
 model Resource {

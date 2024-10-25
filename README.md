@@ -4,9 +4,9 @@ Desarrollo de una app simple de retos de desarrollo con un sistema de "trucos" (
 
 Debe contar con:
 - **Un registro simple**
- - Email y contraseña
- - Selección de nivel de experiencia
- - Areas de interés
+	- Email y contraseña
+	- Selección de nivel de experiencia
+	- Areas de interés
 - **Una página principal**
 	- Retos disponibles
 	- Recursos compartidos recientemente
