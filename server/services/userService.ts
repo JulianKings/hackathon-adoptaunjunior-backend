@@ -10,7 +10,7 @@ export class UserService {
         return this.formatUserArray(result as ApiUserInterface[]);
     }
 
-    static async loadUserById(id: string): Promise<ApiUserInterface | null> {
+    static async loadById(id: string): Promise<ApiUserInterface | null> {
         const result = await this.prisma.user.findMany({ where: { id: Number(id) } });
         const userResult = this.formatUserArray(result as ApiUserInterface[]);
 
@@ -22,7 +22,7 @@ export class UserService {
         }
     }
 
-    static async loadUserByName(name: string): Promise<ApiUserInterface | null> {
+    static async loadByName(name: string): Promise<ApiUserInterface | null> {
         const result = await this.prisma.user.findMany({ where: { name: name } });
         const userResult = this.formatUserArray(result as ApiUserInterface[]);
 

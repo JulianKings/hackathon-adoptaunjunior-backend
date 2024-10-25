@@ -21,7 +21,7 @@ export const applyPassportMiddleware = (passport: PassportStatic) =>
             },
             async (name, password, done) => {
             try {
-                const user = await UserService.loadUserByName(name);
+                const user = await UserService.loadByName(name);
 
                 if (!user) {
                     return done(null, false, { path: nameField, msg: 'User not found' } as unknown as IVerifyOptions);
