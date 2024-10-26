@@ -7,6 +7,11 @@ import { ApiResourceInterface } from './interfaces/resource';
 import { ApiTagInterface } from './interfaces/tag';
 import { ApiHelpIssueInterface } from 'interfaces/help';
 import { UserService } from './services/userService';
+import { ChallengeService } from './services/challengeService';
+import { ResourceService } from './services/resourceService';
+import { SolutionService } from './services/solutionService';
+import { HelpIssueService } from './services/helpIssueService';
+import { TagService } from './services/tagService';
 
 const prisma = new PrismaClient();
 
@@ -50,18 +55,12 @@ function createRandomResource(): ApiResourceInterface {
 }
 
 class ChildItemsGenerator {
-    challengeList: ApiChallengeInterface[];
-    userList: ApiUserInterface[];
+    
 
-    constructor(challengeList: ApiChallengeInterface[], userList: ApiUserInterface[]) {
-        this.challengeList = challengeList;
-        this.userList = userList;
-    }
-
-    createRandomSolution(): ApiSolutionInterface {
+    static createRandomSolution(): ApiSolutionInterface {
         return {
-            challenge_id: (faker.helpers.arrayElement(this.challengeList).id !== undefined) ? faker.helpers.arrayElement(this.challengeList).id as number : 1,
-            author_id: (faker.helpers.arrayElement(this.userList).id !== undefined) ? faker.helpers.arrayElement(this.userList).id as number : 1,
+            challenge_id: (faker.helpers.arrayElement(challenges).id !== undefined) ? faker.helpers.arrayElement(challenges).id as number : 1,
+            author_id: (faker.helpers.arrayElement(users).id !== undefined) ? faker.helpers.arrayElement(users).id as number : 1,
             votes: 0,
             views: 0,
             subject: faker.lorem.sentence(),
@@ -71,11 +70,11 @@ class ChildItemsGenerator {
         }
     }
 
-    createRandomHelpIssue(): ApiHelpIssueInterface {
+    static createRandomHelpIssue(): ApiHelpIssueInterface {
         return {
             created_at: faker.date.past(),
             updated_at: faker.date.past(),
-            author_id: (faker.helpers.arrayElement(this.userList).id !== undefined) ? faker.helpers.arrayElement(this.userList).id as number : 1,
+            author_id: (faker.helpers.arrayElement(users).id !== undefined) ? faker.helpers.arrayElement(users).id as number : 1,
             votes: 0,
             views: 0,
             subject: faker.lorem.sentence(),
@@ -85,13 +84,13 @@ class ChildItemsGenerator {
     }
 }
 
-const users: ApiUserInterface[] = faker.helpers.multiple(createRandomUser, { count: 50 });
-const challenges: ApiChallengeInterface[] = faker.helpers.multiple(createRandomChallenge, { count: 100 });
-const resources: ApiResourceInterface[] = faker.helpers.multiple(createRandomResource, { count: 100 });
+const users: ApiUserInterface[] = faker.helpers.multiple(createRandomUser, { count: 100 });
+const challenges: ApiChallengeInterface[] = faker.helpers.multiple(createRandomChallenge, { count: 200 });
+const resources: ApiResourceInterface[] = faker.helpers.multiple(createRandomResource, { count: 200 });
 const tags: ApiTagInterface[] = [];
 
-const solutions: ApiSolutionInterface[] = [];
-const helpIssues: ApiHelpIssueInterface[] = [];
+let solutions: ApiSolutionInterface[] = [];
+let helpIssues: ApiHelpIssueInterface[] = [];
 
 async function seeder() {
     
@@ -100,10 +99,33 @@ async function seeder() {
         console.log('Starting work...');
         await runCleanup();
         await createUsers();
+        await createChallenges();
+        await createResources();
+
+        createRawTags();
+        await createTags();
+
+        solutions = faker.helpers.multiple(ChildItemsGenerator.createRandomSolution, { count: 300, });
+        helpIssues = faker.helpers.multiple(ChildItemsGenerator.createRandomHelpIssue, { count: 300, });
+
+        await createSolutions();
+        await createHelpIssues();
 
         console.log('All DONE!');
+        console.log('Seeding finished, closing...');
     } catch (error) {
         console.error(error)
+    }
+}
+
+function createRawTags() {
+    const tagArray = ['html', 'css', 'javascript', 'react', 'typescript', 'mysql', 'java', 'python', 'angular', 'halloween challenge', 'tips', 'help', 
+        'c#', 'c++', 'php', 'ruby', 'swift', 'kotlin', 'go', 'rust', 'docker', 'git', 'linux', 'ruby', 'aws', 'lambda', 'azure', 'api', 'node', 'vue', 'django', 'flutter',
+        'solution', 'contributions wanted', 'solved', 'new', 'help wanted', 'new challenge', 'new resource', 'new tag', 'new solution', 'new help issue', 
+        'new', 'hackathon', 'update'];
+
+    for (const tag of tagArray) {
+        tags.push({ tag: tag });
     }
 }
 
@@ -134,6 +156,101 @@ async function createUsers()
 	});
 
 	await Promise.all(concatPromise);
+    console.log('DONE!');
+}
+
+async function createChallenge(challenge: ApiChallengeInterface, index: number) {
+    const result = await ChallengeService.create(challenge);
+    challenges[index] = result;
+}
+
+async function createChallenges()
+{
+    console.log('Adding challenges...');
+
+    const concatPromise: Promise<void>[] = [];
+    challenges.forEach((challenge, index) => 
+    {
+        concatPromise.push(createChallenge(challenge, index));
+    });
+
+    await Promise.all(concatPromise);
+    console.log('DONE!');
+}
+
+async function createResource(resource: ApiResourceInterface, index: number) {
+    const result = await ResourceService.create(resource);
+    resources[index] = result;
+}
+
+async function createResources()
+{
+    console.log('Adding resources...');        
+
+    const concatPromise: Promise<void>[] = [];
+    resources.forEach((resource, index) => 
+    {
+        concatPromise.push(createResource(resource, index));
+    });
+
+    await Promise.all(concatPromise);
+    console.log('DONE!');
+}
+
+async function createSolution(solution: ApiSolutionInterface, index: number) {
+    const result = await SolutionService.create(solution);
+    solutions[index] = result;
+}
+
+async function createSolutions()
+{
+    console.log('Adding solutions...');
+
+    const concatPromise: Promise<void>[] = [];
+    solutions.forEach((solution, index) => 
+    {
+        concatPromise.push(createSolution(solution, index));
+    });    
+
+    await Promise.all(concatPromise);
+    console.log('DONE!');
+}
+
+async function createHelpIssue(helpIssue: ApiHelpIssueInterface, index: number) {
+    const result = await HelpIssueService.create(helpIssue);
+    helpIssues[index] = result;
+}
+
+async function createHelpIssues()
+{
+    console.log('Adding help issues...');
+
+    const concatPromise: Promise<void>[] = [];
+    helpIssues.forEach((helpIssue, index) => 
+    {
+        concatPromise.push(createHelpIssue(helpIssue, index));
+    });    
+
+    await Promise.all(concatPromise);
+    console.log('DONE!');
+}
+
+async function createTag(tag: ApiTagInterface, index: number) {
+    const result = await TagService.create(tag);
+    tags[index] = result;
+}
+
+async function createTags()
+{
+    console.log('Adding tags...');
+
+    const concatPromise: Promise<void>[] = [];
+    tags.forEach((tag, index) => 
+    {
+        concatPromise.push(createTag(tag, index));
+    });    
+
+    await Promise.all(concatPromise);
     console.log('DONE!');
 }
 

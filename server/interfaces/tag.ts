@@ -1,7 +1,7 @@
 import { ApiAbstractInterface } from "./api";
 
 export interface ApiTagInterface extends ApiAbstractInterface {
-    tag: String;
+    tag: string;
 }
 
 export interface ApiTagsByChallengesInterface extends ApiAbstractInterface {

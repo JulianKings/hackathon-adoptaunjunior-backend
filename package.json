@@ -6,7 +6,8 @@
     "start": "ts-node server/app.ts",
     "seed": "ts-node server/seed-sql.ts",
     "build": "rimraf dist && tsc",
-    "dev": "nodemon --exec npx ts-node server/app.ts"
+    "dev": "nodemon --exec npx ts-node server/app.ts",
+    "seed": "npx prisma migrate reset"
   },
   "dependencies": {
     "@prisma/client": "^5.21.1",

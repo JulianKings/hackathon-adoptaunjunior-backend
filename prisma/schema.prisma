@@ -62,7 +62,7 @@ model Challenge {
   updated_at  DateTime    @updatedAt
   title       String      @db.VarChar(255)
   description String      @db.VarChar(500)
-  content     String
+  content     String      @db.Text
   published   Boolean     @default(false)
   difficulty  Difficulty  @default(basic)
   rating      ChallengeRating[]
@@ -89,7 +89,7 @@ model Resource {
   updated_at  DateTime      @updatedAt
   title       String        @db.VarChar(255)
   description String        @db.VarChar(500)
-  content     String
+  content     String        @db.Text
   published   Boolean       @default(false)
   type        ResourceType  @default(course)
   url         String        @db.VarChar(500)
@@ -107,7 +107,7 @@ model HelpIssue {
   votes       Int
   views       Int
   subject     String      @db.VarChar(500)
-  content     String
+  content     String      @db.Text
   tags        TagsByIssues[]
   status      IssueStatus
 
@@ -125,8 +125,8 @@ model Solution {
   votes         Int
   views         Int
   subject       String      @db.VarChar(500)
-  description   String
-  code          String
+  description   String      @db.Text
+  code          String      @db.Text
   verified      Boolean     @default(false)  
 
   @@map("solutions")
