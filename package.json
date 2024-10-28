@@ -4,7 +4,6 @@
   "private": true,
   "scripts": {
     "start": "ts-node server/app.ts",
-    "seed": "ts-node server/seed-sql.ts",
     "build": "rimraf dist && tsc",
     "dev": "nodemon --exec npx ts-node server/app.ts",
     "seed": "npx prisma migrate reset"
@@ -27,6 +26,7 @@
     "express": "^4.21.1",
     "express-async-handler": "^1.2.0",
     "express-session": "^1.18.1",
+    "express-validator": "^7.2.0",
     "morgan": "~1.9.1",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",

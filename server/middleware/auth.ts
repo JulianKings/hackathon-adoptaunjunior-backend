@@ -9,7 +9,7 @@ const LocalExtractJWT = ExtractJwt;
 
 export const applyPassportMiddleware = (passport: PassportStatic) =>
 {
-    const nameField = 'username';
+    const nameField = 'email';
     const pwdField = 'password';
 
     passport.use(
@@ -21,7 +21,7 @@ export const applyPassportMiddleware = (passport: PassportStatic) =>
             },
             async (name, password, done) => {
             try {
-                const user = await UserService.loadByName(name);
+                const user = await UserService.loadByMail(name);
 
                 if (!user) {
                     return done(null, false, { path: nameField, msg: 'User not found' } as unknown as IVerifyOptions);

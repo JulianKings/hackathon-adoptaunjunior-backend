@@ -50,7 +50,8 @@ function createRandomResource(): ApiResourceInterface {
         type: faker.helpers.arrayElement(['video', 'course']),
         url: faker.internet.url(),
         created_at: faker.date.past(),
-        updated_at: faker.date.past()
+        updated_at: faker.date.past(),
+        image: faker.image.urlLoremFlickr()
     }
 }
 

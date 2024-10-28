@@ -93,6 +93,7 @@ model Resource {
   published   Boolean       @default(false)
   type        ResourceType  @default(course)
   url         String        @db.VarChar(500)
+  image       String        @db.VarChar(500)
   tags        TagsByResources[] 
 
   @@map("resources")      

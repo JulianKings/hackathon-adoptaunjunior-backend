@@ -8,6 +8,9 @@ import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 
 import indexController from './controllers/indexController';
+import loginController from './controllers/loginController';
+import sessionController from './controllers/sessionController';
+import challengesController from './controllers/challengesController';
 
 import { applyPassportMiddleware } from './middleware/auth';
 
@@ -17,9 +20,10 @@ const app = express();
 
 const jwtKey: string = (process.env.JWT_SECURE_KEY !== undefined) ? process.env.JWT_SECURE_KEY : 'defaultSecretKey915534b';
 const sessionKey: string = (process.env.SESSION_SECURE_KEY !== undefined) ? process.env.SESSION_SECURE_KEY : 'defaultSecretKey915534bCats';
-
+const defaultPerPage: number = (process.env.DEFAULT_PER_PAGE !== undefined) ? (+process.env.DEFAULT_PER_PAGE) : 10;
 
 app.set('jwt_secret_password', jwtKey);
+app.set('default_per_page', defaultPerPage);
 
 app.use(logger('dev'));
 app.use(cors());
@@ -49,6 +53,15 @@ const bufferToJSONMiddleware = (req: express.Request, res: express.Response, nex
 
 const indexRouterHandler = indexController();
 app.use('/', indexRouterHandler);
+
+const challengesRouterHandler = challengesController();
+app.use('/challenge', challengesRouterHandler);
+
+const sessionRouterHandler = sessionController(passport);
+app.use('/', sessionRouterHandler);
+
+const loginRouterHandler = loginController(passport);
+app.use('/login', loginRouterHandler);
 
 applyPassportMiddleware(passport);
 

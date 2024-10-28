@@ -9,6 +9,17 @@ export class SolutionService {
         const result = await this.prisma.solution.findMany();
         return this.formatSolutionArray(result as ApiSolutionInterface[]);
     }
+
+    static async countPageNumber(perPageAmount: number): Promise<number> {
+        const result = await this.prisma.solution.count();
+        return Math.ceil(result / perPageAmount);
+    }
+    
+    static async loadByPage(page: number, perPageAmount: number): Promise<ApiSolutionInterface[]> {
+        const result = await this.prisma.solution.findMany({ skip: (page - 1) * perPageAmount, take: perPageAmount });
+        return this.formatSolutionArray(result as ApiSolutionInterface[]);
+    }
+
     static async loadById(id: number): Promise<ApiSolutionInterface | null> {
         const result = await this.prisma.solution.findMany({ where: { id: id } });
         const solutionResult = this.formatSolutionArray(result as ApiSolutionInterface[]);

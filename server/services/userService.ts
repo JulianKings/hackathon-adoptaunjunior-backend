@@ -10,6 +10,16 @@ export class UserService {
         return this.formatUserArray(result as ApiUserInterface[]);
     }
 
+    static async countPageNumber(perPageAmount: number): Promise<number> {
+        const result = await this.prisma.user.count();
+        return Math.ceil(result / perPageAmount);
+    }
+
+    static async loadByPage(page: number, perPageAmount: number): Promise<ApiUserInterface[]> {
+        const result = await this.prisma.user.findMany({ skip: (page - 1) * perPageAmount, take: perPageAmount });
+        return this.formatUserArray(result as ApiUserInterface[]);
+    }
+
     static async loadById(id: string): Promise<ApiUserInterface | null> {
         const result = await this.prisma.user.findMany({ where: { id: Number(id) } });
         const userResult = this.formatUserArray(result as ApiUserInterface[]);
@@ -24,6 +34,18 @@ export class UserService {
 
     static async loadByName(name: string): Promise<ApiUserInterface | null> {
         const result = await this.prisma.user.findMany({ where: { name: name } });
+        const userResult = this.formatUserArray(result as ApiUserInterface[]);
+
+        if(userResult.length > 0)
+        {
+            return userResult[0];
+        } else {
+            return null;
+        }
+    }
+
+    static async loadByMail(mail: string): Promise<ApiUserInterface | null> {
+        const result = await this.prisma.user.findMany({ where: { email: mail } });
         const userResult = this.formatUserArray(result as ApiUserInterface[]);
 
         if(userResult.length > 0)

@@ -6,7 +6,7 @@ export default function ()
     const indexController = Router();
 
     indexController.get('/', expressAsyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-          res.json({ message: 'Hello World!' });
+          res.json({ responseStatus: 'ok' });
     }));
 
     return indexController;
