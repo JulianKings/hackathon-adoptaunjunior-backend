@@ -4,9 +4,15 @@ import { ApiUserInterface } from "../interfaces/user";
 export class UserService {
     
     static prisma = new PrismaClient();
+    static commonParams = { 
+        include: {
+            issues: true,
+            solutions: true
+        }
+    }
 
     static async loadAll(): Promise<ApiUserInterface[]> {
-        const result = await this.prisma.user.findMany();
+        const result = await this.prisma.user.findMany({ orderBy: { id: 'asc' }, ...this.commonParams });
         return this.formatUserArray(result as ApiUserInterface[]);
     }
 
@@ -16,12 +22,14 @@ export class UserService {
     }
 
     static async loadByPage(page: number, perPageAmount: number): Promise<ApiUserInterface[]> {
-        const result = await this.prisma.user.findMany({ skip: (page - 1) * perPageAmount, take: perPageAmount });
+        const result = await this.prisma.user.findMany({ skip: (page - 1) * perPageAmount, take: perPageAmount,
+            orderBy: { id: 'asc' }, ...this.commonParams
+         });
         return this.formatUserArray(result as ApiUserInterface[]);
     }
 
     static async loadById(id: string): Promise<ApiUserInterface | null> {
-        const result = await this.prisma.user.findMany({ where: { id: Number(id) } });
+        const result = await this.prisma.user.findMany({ where: { id: Number(id) }, ...this.commonParams });
         const userResult = this.formatUserArray(result as ApiUserInterface[]);
 
         if(userResult.length > 0)

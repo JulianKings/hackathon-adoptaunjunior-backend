@@ -13,8 +13,6 @@ export default function() {
         const currentPage: number = (req.query.page) ? (+req.query.page) : 1;
 
         const challengePages = await ChallengeService.countPageNumber(entriesPerPage);
-        console.log(challengePages);
-        console.log(currentPage);
 
         if(challengePages >= currentPage)
         {

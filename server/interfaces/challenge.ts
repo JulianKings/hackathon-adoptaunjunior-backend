@@ -1,4 +1,6 @@
 import { ApiAbstractInterface } from "./api";
+import { ApiSolutionInterface } from "./solution";
+import { ApiTagsByChallengesInterface } from "./tag";
 
 export interface ApiChallengeInterface extends ApiAbstractInterface {
     created_at: Date;
@@ -9,6 +11,10 @@ export interface ApiChallengeInterface extends ApiAbstractInterface {
     published: boolean;
     difficulty: 'basic' | 'easy' | 'medium' | 'hard' | 'expert';
     picture: string;
+    tags?: any | ApiTagsByChallengesInterface[];
+    solutions?: any | ApiSolutionInterface[];
+    rating?: any | ApiChallengeRatingInterface[];
+
 }
 
 export interface ApiChallengeRatingInterface extends ApiAbstractInterface {

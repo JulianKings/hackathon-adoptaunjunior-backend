@@ -99,12 +99,13 @@ async function seeder() {
     try {
         console.log('Starting work...');
         await runCleanup();
-        await createUsers();
-        await createChallenges();
-        await createResources();
 
         createRawTags();
         await createTags();
+
+        await createUsers();
+        await createChallenges();
+        await createResources();
 
         solutions = faker.helpers.multiple(ChildItemsGenerator.createRandomSolution, { count: 300, });
         helpIssues = faker.helpers.multiple(ChildItemsGenerator.createRandomHelpIssue, { count: 300, });
@@ -162,6 +163,33 @@ async function createUsers()
 
 async function createChallenge(challenge: ApiChallengeInterface, index: number) {
     const result = await ChallengeService.create(challenge);
+
+    // give it 10 tags
+    if(result.id !== undefined)
+    {
+        const randomTagList: ApiTagInterface[] = [];
+        let i = 0;
+        while (i < 10) {
+            const randomTag = faker.helpers.arrayElement(tags);
+            if(randomTagList.find((tag) => tag.id === randomTag.id) === undefined)
+            {
+                randomTagList.push(randomTag);
+                i++;
+            }
+        }
+
+        for(const tag of randomTagList)
+        {
+            await TagService.createFor('challenge', result.id, tag);
+        }
+    }
+
+    // give it 10 valorations
+    for(let i = 0; i < 10; i++)
+    {
+        await ChallengeService.addValorations(result, faker.helpers.arrayElement([0, 1, 2, 3, 4, 5]) as number);
+    }
+
     challenges[index] = result;
 }
 
@@ -181,6 +209,27 @@ async function createChallenges()
 
 async function createResource(resource: ApiResourceInterface, index: number) {
     const result = await ResourceService.create(resource);
+
+    // give it 10 tags
+    if(result.id !== undefined)
+    {
+        const randomTagList: ApiTagInterface[] = [];
+        let i = 0;
+        while (i < 10) {
+            const randomTag = faker.helpers.arrayElement(tags);
+            if(randomTagList.find((tag) => tag.id === randomTag.id) === undefined)
+            {
+                randomTagList.push(randomTag);
+                i++;
+            }
+        }
+
+        for(const tag of randomTagList)
+        {
+            await TagService.createFor('resource', result.id, tag);
+        }
+    }
+
     resources[index] = result;
 }
 
@@ -219,6 +268,27 @@ async function createSolutions()
 
 async function createHelpIssue(helpIssue: ApiHelpIssueInterface, index: number) {
     const result = await HelpIssueService.create(helpIssue);
+
+    // give it 10 tags
+    if(result.id !== undefined)
+    {
+        const randomTagList: ApiTagInterface[] = [];
+        let i = 0;
+        while (i < 10) {
+            const randomTag = faker.helpers.arrayElement(tags);
+            if(randomTagList.find((tag) => tag.id === randomTag.id) === undefined)
+            {
+                randomTagList.push(randomTag);
+                i++;
+            }
+        }
+
+        for(const tag of randomTagList)
+        {
+            await TagService.createFor('issue', result.id, tag);
+        }
+    }
+
     helpIssues[index] = result;
 }
 

@@ -3,10 +3,15 @@ import { PrismaClient } from "@prisma/client";
 
 export class ResourceService
 {
-    static prisma = new PrismaClient()
+    static prisma = new PrismaClient();
+    static commonParams = { 
+        include: {
+            tags: { include: { tag: true } }
+        }
+    }
 
     static async loadAll(): Promise<ApiResourceInterface[]> {
-        const result = await this.prisma.resource.findMany();
+        const result = await this.prisma.resource.findMany( { orderBy: { id: 'asc' }, ...this.commonParams });
         return this.formatResourceArray(result as ApiResourceInterface[]);
     }
 
@@ -16,12 +21,15 @@ export class ResourceService
     }
 
     static async loadByPage(page: number, perPageAmount: number): Promise<ApiResourceInterface[]> {
-        const result = await this.prisma.resource.findMany({ skip: (page - 1) * perPageAmount, take: perPageAmount });
+        const result = await this.prisma.resource.findMany({ skip: (page - 1) * perPageAmount, take: perPageAmount,
+            ...this.commonParams
+         });
         return this.formatResourceArray(result as ApiResourceInterface[]);
     }
 
     static async loadById(id: string): Promise<ApiResourceInterface | null> {
-        const result = await this.prisma.resource.findMany({ where: { id: Number(id) } });
+        const result = await this.prisma.resource.findMany({ where: { id: Number(id) }, 
+            ...this.commonParams });
         const resourceResult = this.formatResourceArray(result as ApiResourceInterface[]);
 
         if(resourceResult.length > 0)

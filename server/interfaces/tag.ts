@@ -4,17 +4,18 @@ export interface ApiTagInterface extends ApiAbstractInterface {
     tag: string;
 }
 
-export interface ApiTagsByChallengesInterface extends ApiAbstractInterface {
+export interface ApiAbstractTagsByInterface extends ApiAbstractInterface {
+    tag_id: number;
+}
+
+export interface ApiTagsByChallengesInterface extends ApiAbstractTagsByInterface {
     challenge_id: number;
-    tag_id: number;
 }
 
-export interface ApiTagsByIssuesInterface extends ApiAbstractInterface {
+export interface ApiTagsByIssuesInterface extends ApiAbstractTagsByInterface {
     issue_id: number;
-    tag_id: number;
 }
 
-export interface ApiTagsByResourcesInterface extends ApiAbstractInterface {
+export interface ApiTagsByResourcesInterface extends ApiAbstractTagsByInterface {
     resource_id: number;
-    tag_id: number;
 }

@@ -4,9 +4,16 @@ import { ApiHelpIssueInterface } from "interfaces/help";
 export class HelpIssueService
 {
     static prisma = new PrismaClient();
+    static commonParams = { 
+        include: {
+            tags: { include: { tag: true } },
+            author: true
+        }
+    }
 
     static async loadAll(): Promise<ApiHelpIssueInterface[]> {
-        const result = await this.prisma.helpIssue.findMany();
+        const result = await this.prisma.helpIssue.findMany({ orderBy: { id: 'asc' },
+            ...this.commonParams});
         return this.formatHelpIssueArray(result as ApiHelpIssueInterface[]);
     }
 
@@ -16,12 +23,14 @@ export class HelpIssueService
     }
 
     static async loadByPage(page: number, perPageAmount: number): Promise<ApiHelpIssueInterface[]> {
-        const result = await this.prisma.helpIssue.findMany({ skip: (page - 1) * perPageAmount, take: perPageAmount });
+        const result = await this.prisma.helpIssue.findMany({ orderBy: { id: 'asc' }, skip: (page - 1) * perPageAmount, take: perPageAmount,
+        ...this.commonParams
+    });
         return this.formatHelpIssueArray(result as ApiHelpIssueInterface[]);
     }
 
     static async loadById(id: number): Promise<ApiHelpIssueInterface | null> {
-        const result = await this.prisma.helpIssue.findMany({ where: { id: id } });
+        const result = await this.prisma.helpIssue.findMany({ where: { id: id }, ...this.commonParams });
         const helpIssueResult = this.formatHelpIssueArray(result as ApiHelpIssueInterface[]);
         
         if(helpIssueResult.length > 0)
