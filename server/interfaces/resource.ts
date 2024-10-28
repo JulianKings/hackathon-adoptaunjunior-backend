@@ -9,4 +9,5 @@ export interface ApiResourceInterface extends ApiAbstractInterface {
     published: boolean;
     type: 'video' | 'course';
     url: string;
+    image: string;
 }
