@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "ts-node server/app.ts",
-    "build": "rimraf dist && tsc",
+    "build": "prisma generate && rimraf dist && tsc",
     "dev": "nodemon --exec npx ts-node server/app.ts",
     "seed": "npx prisma migrate reset"
   },
