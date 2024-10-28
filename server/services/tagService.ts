@@ -3,14 +3,33 @@ import { ApiAbstractTagsByInterface, ApiTagInterface } from "interfaces/tag";
 
 export class TagService {
     static prisma = new PrismaClient();
+    static commonParams = { 
+        include: {
+            challenges: { include: { challenge: true } },
+            solutions: { include: { solution: true } },
+            resources: { include: { resource: true } }            
+        }
+    }
 
     static async loadAll(): Promise<string[]> {
-        const result = await this.prisma.tag.findMany();
+        const result = await this.prisma.tag.findMany({ orderBy: { id: 'asc' }, ...this.commonParams });
         return result.map((tag) => tag.tag);
     }
 
+    static async countPageNumber(perPageAmount: number): Promise<number> {
+        const result = await this.prisma.tag.count();
+        return Math.ceil(result / perPageAmount);
+    }
+
+    static async loadByPage(page: number, perPageAmount: number): Promise<ApiTagInterface[]> {
+        const result = await this.prisma.tag.findMany({ skip: (page - 1) * perPageAmount, take: perPageAmount,
+            ...this.commonParams, orderBy: { id: 'asc' }
+         });
+        return this.formatTagArray(result as ApiTagInterface[]);
+    }
+
     static async loadById(id: number): Promise<ApiTagInterface | null> {
-        const result = await this.prisma.tag.findMany({ where: { id: id } });
+        const result = await this.prisma.tag.findMany({ where: { id: id }, ...this.commonParams });
         const tagResult = this.formatTagArray(result as ApiTagInterface[]);
 
         if(tagResult.length > 0)

@@ -23,6 +23,11 @@ export default function() {
         }
     }));
 
+    challengesController.get('/all', expressAsyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+        const challenges = await ChallengeService.loadAll();
+        res.json({ data: challenges });
+    }))
+
     challengesController.get('/:id', expressAsyncHandler(async (req: Request<{id: string}>, res: Response, next: NextFunction) => {
         const challenge = await ChallengeService.loadById(req.params.id);
         if(challenge)

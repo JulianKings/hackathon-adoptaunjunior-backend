@@ -18,4 +18,18 @@ Debe contar con:
 	- Subir capturas de código
 	- Dar y recibir feedback
 
+
+### Cómo configurar
+Necesitamos una base de datos MySQL en local y crear una en concreto para nuestra aplicación
+- Necesitamos crear un archivo ".env" en la raíz con las siguientes configuraciones:
+	- DATABASE_URL="mysql://(usuario):(contraseña)@(host):(puerto)/(nombre de la base de datos)?schema=public"
+	- JWT_SECURE_KEY=(clave para JWT)
+	- SESSION_SECURE_KEY=(clave para las sesiones)
+	- DEFAULT_PER_PAGE=(cantidad de entradas por pagina, recomendado: 10)
+- Una vez hecho eso, ejecutaremos los siguientes comandos:
+	- npm install
+	- npm run seed
+
+Y ya esta listo, solo faltaría ejecutar **npm run dev** y debería ir sin ningún problema.
+
 Más información [aquí](https://www.linkedin.com/posts/adoptaunjunior_hackathon-adoptaunjunior-ugcPost-7254414851756728321-XWzZ/?utm_source=share&utm_medium=member_desktop "aquí").

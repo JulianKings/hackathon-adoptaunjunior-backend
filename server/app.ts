@@ -11,6 +11,11 @@ import indexController from './controllers/indexController';
 import loginController from './controllers/loginController';
 import sessionController from './controllers/sessionController';
 import challengesController from './controllers/challengesController';
+import issuesController from "./controllers/issuesController";
+import solutionController from "./controllers/solutionController";
+import resourcesController from "./controllers/resourcesController";
+import userController from "./controllers/userController";
+import tagController from "./controllers/tagController";
 
 import { applyPassportMiddleware } from './middleware/auth';
 
@@ -62,6 +67,21 @@ app.use('/', sessionRouterHandler);
 
 const loginRouterHandler = loginController(passport);
 app.use('/login', loginRouterHandler);
+
+const issuesRouterHandler = issuesController();
+app.use('/issue', issuesRouterHandler);
+
+const solutionRouterHandler = solutionController();
+app.use('/solution', solutionRouterHandler);
+
+const resourcesRouterHandler = resourcesController();
+app.use('/resource', resourcesRouterHandler);
+
+const userRouterHandler = userController();
+app.use('/user', userRouterHandler);
+
+const tagRouterHandler = tagController();
+app.use('/tag', tagRouterHandler);
 
 applyPassportMiddleware(passport);
 

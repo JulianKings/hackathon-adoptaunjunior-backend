@@ -2,6 +2,9 @@ import { ApiAbstractInterface } from "./api";
 
 export interface ApiTagInterface extends ApiAbstractInterface {
     tag: string;
+    challenges?: ApiTagsByChallengesInterface[] | any;
+    resources?: ApiTagsByResourcesInterface[] | any;
+    issues?: ApiTagsByIssuesInterface[] | any;
 }
 
 export interface ApiAbstractTagsByInterface extends ApiAbstractInterface {
